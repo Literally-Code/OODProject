@@ -12,6 +12,7 @@ public class Game {
     // Fields
     private Difficulty gameDifficulty;
     private Scanner userInput;
+    private Map map;
 
     public Game(Scanner userInput)
     {
