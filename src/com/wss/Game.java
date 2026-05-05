@@ -13,6 +13,7 @@ public class Game {
     private Difficulty gameDifficulty;
     private Scanner userInput;
     private Map map;
+    private boolean running;
 
     public Game(Scanner userInput)
     {
@@ -22,7 +23,36 @@ public class Game {
     public void initialize()
     {
         this.promptDifficulty();
-        // TODO: Begin game loop
+        this.promptSize();
+        this.running = true;
+
+        while (this.running)
+        {
+            this.clearScreen();
+            this.update();
+            this.render();
+            this.input();
+        }
+    }
+
+    public void render()
+    {
+        this.map.renderTerrain();
+    }
+
+    public void update()
+    {
+        
+    }
+
+    public void input()
+    {
+        this.userInput.nextLine();
+    }
+
+    public void clearScreen()
+    {
+        System.out.print("\u001b[2J");
     }
 
     public static String difficultyToString(Difficulty difficulty)
@@ -43,7 +73,7 @@ public class Game {
         return "None";
     }
 
-    public void promptDifficulty()
+    private void promptDifficulty()
     {
         boolean inputSuccess = false;
         while (!inputSuccess)
@@ -74,6 +104,29 @@ public class Game {
             }
         }
         System.out.println("Selected difficulty: " + difficultyToString(gameDifficulty));
+    }
+
+    public void promptSize()
+    {
+        boolean inputSuccess = false;
+        while (!inputSuccess)
+        {
+            System.out.println("Please input the size of the map for the simulation (width height): ");
+            String input = userInput.nextLine();
+            
+            try {
+                String[] splitInput = input.split(" ");
+                int width = Integer.parseInt(splitInput[0]);
+                int height = Integer.parseInt(splitInput[1]);
+
+                Size mapSize = new Size(width, height);
+                this.map = new Map(mapSize, Math.random());
+                this.map.genTerrain(this.gameDifficulty);
+                inputSuccess = true;
+            } catch (Exception e) {
+                System.out.println("Invalid option!");
+            }
+        }
     }
 
     public Difficulty getDifficulty()

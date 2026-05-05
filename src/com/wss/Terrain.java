@@ -39,6 +39,22 @@ public class Terrain {
         this.type = TerrainType.GRASS;
     }
 
+    public static void renderTile(Terrain tile, int res, int row, int col)
+    {
+        int transformedRow = res * row;
+        int transformedCol = res * col;
+        for (int w = 0; w < res; w++)
+        {
+            System.out.printf("\u001b[%d;%dH", transformedRow + w + 1, transformedCol + 1);
+
+            for (int h = 0; h < res; h++)
+            {
+                System.out.print(tile.getRenderChar());
+            }
+            System.out.printf("\u001b[%d;1H", transformedRow + res + 1);
+        }
+    }
+
     public boolean hasItems()
     {
         return this.items.length > 0;

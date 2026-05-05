@@ -110,9 +110,8 @@ public class Map {
         {
             for (int w = 0; w < rowSize; w++)
             {
-                System.out.print(this.tiles[w + h * rowSize].getRenderChar());
+                Terrain.renderTile(this.tiles[w + h * rowSize], 3, w, h);
             }
-            System.out.println();
         }
     }
 }
