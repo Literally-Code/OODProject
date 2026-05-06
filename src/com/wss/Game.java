@@ -2,17 +2,14 @@ package com.wss;
 
 import java.util.Scanner;
 
-enum Difficulty {
-    Easy, 
-    Medium, 
-    Hard
-}
+import com.wss.map.MapGrid;
+import com.wss.spacial.Size;
 
 public class Game {
     // Fields
     private Difficulty gameDifficulty;
     private Scanner userInput;
-    private Map map;
+    private MapGrid map;
     private boolean running;
 
     public Game(Scanner userInput)
@@ -120,7 +117,7 @@ public class Game {
                 int height = Integer.parseInt(splitInput[1]);
 
                 Size mapSize = new Size(width, height);
-                this.map = new Map(mapSize, Math.random());
+                this.map = new MapGrid(mapSize, Math.random());
                 this.map.genTerrain(this.gameDifficulty);
                 inputSuccess = true;
             } catch (Exception e) {

@@ -1,51 +1,17 @@
-package com.wss;
+package com.wss.map;
 
-class Size {
-    private int width, height;
+import com.wss.Difficulty;
+import com.wss.spacial.Size;
 
-    public Size(int width, int height)
-    {
-        this.width = width;
-        this.height = height;
-    }
-
-    public void setSize(int width, int height)
-    {
-        this.width = width;
-        this.height = height;
-    }
-
-    public void addSize(int width, int height)
-    {
-        this.width += width;
-        this.height += height;
-    }
-
-    public int getWidth()
-    {
-        return this.width;
-    }
-
-    public int getHeight()
-    {
-        return this.height;
-    }
-
-    public Size clone()
-    {
-        return new Size(this.width, this.height);
-    }
-}
-
-public class Map {
-    private Terrain[] tiles;
+public class MapGrid {
+    private Square[] tiles;
     private Size size;
     private double seed;
 
-    public Map(Size size, double seed)
+    public MapGrid(Size size, double seed)
     {
         this.size = (Size)size.clone();
-        this.tiles = new Terrain[size.getWidth() * size.getHeight()];
+        this.tiles = new Square[size.getWidth() * size.getHeight()];
         this.seed = seed + Math.random(); // Add random value between 0..1 to avoid noise zeroes
     }
 
@@ -87,15 +53,15 @@ public class Map {
                 
                 if (noiseResult < 0.7 + difficultyBias)
                 {
-                    this.tiles[w + h * rowSize] = new Terrain(TerrainType.WATER);
+                    this.tiles[w + h * rowSize] = new Square(TerrainType.WATER);
                 }
                 else if (noiseResult < 1 + difficultyBias)
                 {
-                    this.tiles[w + h * rowSize] = new Terrain(TerrainType.SAND);
+                    this.tiles[w + h * rowSize] = new Square(TerrainType.SAND);
                 }
                 else
                 {
-                    this.tiles[w + h * rowSize] = new Terrain(TerrainType.GRASS);
+                    this.tiles[w + h * rowSize] = new Square(TerrainType.GRASS);
                 }
             }
         }

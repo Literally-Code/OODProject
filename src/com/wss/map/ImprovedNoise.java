@@ -1,4 +1,4 @@
-package com.wss;
+package com.wss.map;
 
 // JAVA REFERENCE IMPLEMENTATION OF IMPROVED NOISE - COPYRIGHT 2002 KEN PERLIN.
 

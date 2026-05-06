@@ -1,4 +1,4 @@
-package com.wss;
+package com.wss.spacial;
 
 public class Path {
     
