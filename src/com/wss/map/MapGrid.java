@@ -76,7 +76,7 @@ public class MapGrid {
         {
             for (int w = 0; w < rowSize; w++)
             {
-                Terrain.renderTile(this.tiles[w + h * rowSize], 3, w, h);
+                Square.renderTile(this.tiles[w + h * rowSize], 3, w, h);
             }
         }
     }
