@@ -1,4 +1,11 @@
+package com.wss.player.vision;
+
 import java.util.*;
+
+import com.wss.spacial.Position;
+import com.wss.spacial.Path;
+import com.wss.map.Square;
+import com.wss.map.MapGrid;
 
 /**
  * Evaluates nearby squares and generates optimal paths to targets.

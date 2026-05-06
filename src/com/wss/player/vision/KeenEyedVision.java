@@ -1,11 +1,17 @@
+package com.wss.player.vision;
+
 import java.util.*;
 
-/**
- * Sees north, south, and east of the player.
- */
-public class CautiousVision extends Vision {
+import com.wss.map.MapGrid;
+import com.wss.map.Square;
+import com.wss.spacial.Position;
 
-    public CautiousVision(MapGrid map, Position pos) {
+/**
+ * Sees surrounding squares plus extended vision to the east.
+ */
+public class KeenEyedVision extends Vision {
+
+    public KeenEyedVision(MapGrid map, Position pos) {
         super(map, pos);
     }
 
@@ -14,9 +20,10 @@ public class CautiousVision extends Vision {
         List<Square> visible = new ArrayList<>();
 
         int[][] dirs = {
-                {-1, 0}, // north
-                {1, 0},  // south
-                {0, 1}   // east
+                {-1, 0}, {-1, 1},
+                {0, 1},  {1, 1},
+                {1, 0},
+                {0, 2} // extra east
         };
 
         for (int[] d : dirs) {

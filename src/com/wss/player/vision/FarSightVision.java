@@ -1,11 +1,17 @@
+package com.wss.player.vision;
+
 import java.util.*;
 
-/**
- * Sees surrounding squares plus extended vision to the east.
- */
-public class KeenEyedVision extends Vision {
+import com.wss.map.MapGrid;
+import com.wss.map.Square;
+import com.wss.spacial.Position;
 
-    public KeenEyedVision(MapGrid map, Position pos) {
+/**
+ * Sees a wider area around and ahead of the player.
+ */
+public class FarSightVision extends Vision {
+
+    public FarSightVision(MapGrid map, Position pos) {
         super(map, pos);
     }
 
@@ -14,10 +20,11 @@ public class KeenEyedVision extends Vision {
         List<Square> visible = new ArrayList<>();
 
         int[][] dirs = {
-                {-1, 0}, {-1, 1},
-                {0, 1},  {1, 1},
-                {1, 0},
-                {0, 2} // extra east
+                {-2, 0}, {-2, 1},
+                {-1, 0}, {-1, 1}, {-1, 2},
+                {0, 1},  {0, 2},
+                {1, 0},  {1, 1},  {1, 2},
+                {2, 0},  {2, 1}
         };
 
         for (int[] d : dirs) {

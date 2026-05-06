@@ -1,5 +1,10 @@
-package com.wss;
+package com.wss.player;
 import java.util.Scanner;
+
+import com.wss.Items;
+import com.wss.Trade;
+import com.wss.spacial.Path;
+import com.wss.player.vision.*;
 
 /*
 *

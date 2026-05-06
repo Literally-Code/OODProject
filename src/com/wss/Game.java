@@ -2,11 +2,7 @@ package com.wss;
 
 import java.util.Scanner;
 
-enum Difficulty {
-    Easy, 
-    Medium, 
-    Hard
-}
+import com.wss.map.Map;
 
 public class Game {
     // Fields
