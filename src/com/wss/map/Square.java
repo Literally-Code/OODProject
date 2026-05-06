@@ -66,6 +66,70 @@ public class Square {
         return this.items.length > 0;
     }
 
+    public boolean hasFood()
+    {
+        if (!hasItems())
+        {
+            return false;
+        }
+
+        for (Items item : items) {
+            if (item instanceof Food) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean hasWater()
+    {
+        if (!hasItems())
+        {
+            return false;
+        }
+
+        for (Items item : items) {
+            if (item instanceof Water) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean hasGold()
+    {
+        if (!hasItems())
+        {
+            return false;
+        }
+
+        for (Items item : items) {
+            if (item instanceof Gold) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean hasTrader()
+    {
+        if (!hasItems())
+        {
+            return false;
+        }
+
+        for (Items item : items) {
+            if (item instanceof Trader) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public char getRenderChar()
     {
         return this.type.getData().renderChar();
