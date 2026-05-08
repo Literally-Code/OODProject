@@ -1,7 +1,7 @@
 package com.wss.player;
 import java.util.Scanner;
 
-import com.wss.Items;
+import com.wss.items.Items;
 import com.wss.Trade;
 import com.wss.spacial.Path;
 import com.wss.player.vision.*;
@@ -18,16 +18,21 @@ public class Player {
     private Vision eye;
     private Brain brain;
 
-    //By default, the player is a Standard player
-    public Player(Vision eye, Brain brain)
+    public Player()
     {
-        maxStrength = 100;
-        maxWater = 100;
-        maxFood = 100;
+        
+    }
 
-        currStrength = 100;
-        currWater = 100;
-        currFood = 100;
+    public Player(int str, int water, int food)
+    {
+        maxStrength = str;
+        maxWater = water;
+        maxFood = food;
+
+        currStrength = maxStrength;
+        currWater = maxWater;
+        currFood = maxFood;
+        gold = 5;
     }
 
     //I haven't figured this one out yet o_o
@@ -128,4 +133,23 @@ public class Player {
         return somePathObject;
     }
 
+    public void setStrength(int value)
+    {
+        currStrength = value;
+    }
+
+    public void setWater(int value)
+    {
+        currWater = value;
+    }
+
+    public void setFood(int value)
+    {
+        currFood = value;
+    }
+
+    public void setGold(int value)
+    {
+        gold = value;
+    }
 }
