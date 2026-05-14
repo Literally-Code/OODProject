@@ -3,21 +3,20 @@ package com.wss.items;
 public class GreedyTrader extends Trader {
 
     public GreedyTrader() {
-        super("Greedy Trader", 3);
+        super(8, 4);
     }
 
     @Override
-    protected boolean isFairTrade(TradeOffer offer) {
-        int playerGives =
-                offer.getGoldOffered() * 3 +
-                offer.getFoodOffered() * 2 +
-                offer.getWaterOffered() * 2;
+    public TradeOffer counterTrade(TradeOffer offer) {
+        System.out.println("Greedy Trader demands more.");
 
-        int playerWants =
-                offer.getGoldRequested() * 3 +
-                offer.getFoodRequested() * 2 +
-                offer.getWaterRequested() * 2;
-
-        return playerGives >= playerWants * 2;
+        return new TradeOffer(
+                offer.getGoldOffered() + 2,
+                offer.getFoodOffered(),
+                offer.getWaterOffered(),
+                offer.getGoldRequested(),
+                offer.getFoodRequested(),
+                offer.getWaterRequested()
+        );
     }
 }
