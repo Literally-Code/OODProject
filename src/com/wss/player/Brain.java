@@ -7,9 +7,9 @@ public class Brain {
 
     public Brain(){}
 
-    //i'll figure this out eventually 
-    public Path makeMove(Vision eye)
+    //Default brain takes easiest path always
+    public Path makeMove(Vision eye, int[] stats)
     {
-        return null;
+        return eye.easiestPath();
     }
 }

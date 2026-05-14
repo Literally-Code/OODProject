@@ -5,6 +5,7 @@ import com.wss.items.Items;
 import com.wss.Trade;
 import com.wss.spacial.Path;
 import com.wss.player.vision.*;
+import com.wss.spacial.Position;
 
 /*
 *
@@ -17,6 +18,7 @@ public class Player {
     private int maxStrength, maxWater, maxFood;
     private Vision eye;
     private Brain brain;
+    private Position initialPos;
 
     public Player()
     {
@@ -38,7 +40,7 @@ public class Player {
     //I haven't figured this one out yet o_o
     public void initialize()
     {
-
+        initialPos = new Position(0, 0);
     }
 
     /*
@@ -123,7 +125,8 @@ public class Player {
     //makeMove() calls makeMove() in the Brain object
     public Path makeMove()
     {
-        Path somePathObject = brain.makeMove(eye);
+        int[] stats = {currStrength, currWater, currFood, gold};
+        Path somePathObject = brain.makeMove(eye, stats);
         //if the path = 0
             if(currStrength + 5 > maxStrength)
                 currStrength = maxStrength;
