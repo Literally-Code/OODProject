@@ -8,6 +8,11 @@ public class Gold extends Items {
         this.amount = amount;
     }
 
+    public Gold() {
+        super("Gold", false);
+        this.amount = 10;
+    }
+
     public int getAmount() {
         return amount;
     }

@@ -22,6 +22,11 @@ public class Trader extends Items {
                 offer.getWaterRequested()
         );
     }
+    public Trader() {
+        super("Trader", true);
+        this.interest = 5;
+        this.dangerLevel = 3;
+    }
 
     public void acceptTrade() {
         System.out.println("Trader accepts the trade.");

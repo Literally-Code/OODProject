@@ -1,6 +1,12 @@
 package com.wss.map;
 
+import java.util.Random;
+
 import com.wss.Difficulty;
+import com.wss.items.Food;
+import com.wss.items.Gold;
+import com.wss.items.Trader;
+import com.wss.items.Water;
 import com.wss.spacial.Size;
 
 public class MapGrid {
@@ -67,6 +73,41 @@ public class MapGrid {
         }
     }
 
+    public void genItems()
+    {
+        Random rand = new Random();
+
+        int rowSize = this.size.getWidth();
+        int colSize = this.size.getHeight();
+
+        for (int h = 0; h < colSize; h++)
+        {
+            for (int w = 0; w < rowSize; w++)
+            {
+                Square tile = this.tiles[w + h * rowSize];
+
+                double chance = rand.nextDouble();
+
+                if (chance < 0.05)
+                {
+                    tile.addItem(new Gold());
+                }
+                else if (chance < 0.10)
+                {
+                    tile.addItem(new Food(10, true));
+                }
+                else if (chance < 0.15)
+                {
+                    tile.addItem(new Water(10, true));
+                }
+                else if (chance < 0.17)
+                {
+                    tile.addItem(new Trader());
+                }
+            }
+        }
+    }
+
     public void renderTerrain()
     {
         int rowSize = this.size.getWidth();
@@ -79,5 +120,22 @@ public class MapGrid {
                 Square.renderTile(this.tiles[w + h * rowSize], 3, w, h);
             }
         }
+    }
+
+    public void debugPrintItems()
+    {
+    int rowSize = this.size.getWidth();
+    int colSize = this.size.getHeight();
+
+    for (int h = 0; h < colSize; h++)
+        {
+        for (int w = 0; w < rowSize; w++)
+            {
+            Square tile = this.tiles[w + h * rowSize];
+
+            System.out.print("(" + w + "," + h + ") ");
+            tile.printItems();
+            }
+     }
     }
 }
