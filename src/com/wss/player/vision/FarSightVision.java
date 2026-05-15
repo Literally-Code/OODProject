@@ -28,7 +28,8 @@ public class FarSightVision extends Vision {
         };
 
         for (int[] d : dirs) {
-            Position newPos = new Position(playerPos.row + d[0], playerPos.col + d[1]);
+            int[] tempPos = playerPos.getPosition();
+            Position newPos = new Position(tempPos[0] + d[0], tempPos[1] + d[1]);
 
             if (map.isValid(newPos)) {
                 visible.add(map.getSquare(newPos));
