@@ -3,7 +3,7 @@ package com.wss.player;
 import com.wss.player.vision.Vision;
 import com.wss.spacial.Path;
 
-public class AdventureBrain {
+public class AdventureBrain extends Brain{
     public AdventureBrain()
     {}
 

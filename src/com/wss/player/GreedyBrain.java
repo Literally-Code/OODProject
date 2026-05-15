@@ -4,7 +4,7 @@ import com.wss.player.vision.Vision;
 import com.wss.spacial.Path;
 
 
-public class GreedyBrain {
+public class GreedyBrain extends Brain{
     public GreedyBrain()
     {}
 
