@@ -5,22 +5,24 @@ import java.util.Scanner;
 import com.wss.map.MapGrid;
 import com.wss.spacial.Size;
 
-public class Game {
+public class Game implements Runnable {
     // Fields
     private Difficulty gameDifficulty;
     private Scanner userInput;
     private MapGrid map;
     private boolean running;
+    private boolean autoRun;
 
     public Game(Scanner userInput)
     {
         this.userInput = userInput;
     }
 
-    public void initialize()
+    public void run()
     {
         this.promptDifficulty();
         this.promptSize();
+        this.promptAutoRun();
         this.running = true;
 
         while (this.running)
@@ -28,7 +30,18 @@ public class Game {
             this.clearScreen();
             this.update();
             this.render();
-            this.input();
+            if (this.autoRun)
+            {
+                try {
+                    Thread.sleep(30);
+                } catch (InterruptedException e) {
+                    this.gameOver();
+                }
+            }
+            else
+            {
+                this.input();
+            }
         }
     }
 
@@ -45,6 +58,11 @@ public class Game {
     public void input()
     {
         this.userInput.nextLine();
+    }
+
+    public void gameOver()
+    {
+        System.out.println("Game over!");
     }
 
     public void clearScreen()
@@ -120,6 +138,31 @@ public class Game {
                 this.map = new MapGrid(mapSize, Math.random());
                 this.map.genTerrain(this.gameDifficulty);
                 inputSuccess = true;
+            } catch (Exception e) {
+                System.out.println("Invalid option!");
+            }
+        }
+    }
+
+    public void promptAutoRun()
+    {
+        boolean inputSuccess = false;
+        while (!inputSuccess)
+        {
+            System.out.println("Auto run? (y/n) ");
+            String input = userInput.nextLine();
+            
+            try {
+                if (input.equals("y"))
+                {
+                    this.autoRun = true;
+                    inputSuccess = true;
+                }
+                else if (input.equals("n"))
+                {
+                    this.autoRun = false;
+                    inputSuccess = true;
+                }
             } catch (Exception e) {
                 System.out.println("Invalid option!");
             }
