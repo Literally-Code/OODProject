@@ -1,14 +1,10 @@
 package com.wss.player.vision;
 
-import java.util.*;
-
 import com.wss.map.MapGrid;
-import com.wss.map.Square;
 import com.wss.spacial.Position;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Sees only one square directly to the east.
- */
 public class FocusedVision extends Vision {
 
     public FocusedVision(MapGrid map, Position pos) {
@@ -16,15 +12,11 @@ public class FocusedVision extends Vision {
     }
 
     @Override
-    public List<Square> getVisibleSquares() {
-        List<Square> visible = new ArrayList<>();
+    protected List<Position> getVisiblePositions() {
 
-        int[] tempPos = playerPos.getPosition();
-        Position east = new Position(tempPos[0], tempPos[1] + 1);
+        List<Position> visible = new ArrayList<>();
 
-        if (map.isValid(east)) {
-            visible.add(map.getSquare(east));
-        }
+        visible.add((Position) offsetFromPlayer(0, 1));
 
         return visible;
     }

@@ -1,14 +1,10 @@
 package com.wss.player.vision;
 
-import java.util.*;
-
 import com.wss.map.MapGrid;
-import com.wss.map.Square;
 import com.wss.spacial.Position;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Sees surrounding squares plus extended vision to the east.
- */
 public class KeenEyedVision extends Vision {
 
     public KeenEyedVision(MapGrid map, Position pos) {
@@ -16,25 +12,16 @@ public class KeenEyedVision extends Vision {
     }
 
     @Override
-    public List<Square> getVisibleSquares() {
-        List<Square> visible = new ArrayList<>();
+    protected List<Position> getVisiblePositions() {
 
-        int[][] dirs = {
-                {-1, 0}, {-1, 1},
-                {0, 1},  {1, 1},
-                {1, 0},
-                {0, 2} // extra east
-        };
+        List<Position> visible = new ArrayList<>();
 
-        for (int[] d : dirs) {
-            int[] tempPos = playerPos.getPosition();
-            //tempPos[0] = the row, tempPos[1] = the column
-            Position newPos = new Position(tempPos[0] + d[0], tempPos[1] + d[1]);
-
-            if (map.isValid(newPos)) {
-                visible.add(map.getSquare(newPos));
-            }
-        }
+        visible.add((Position) offsetFromPlayer(-1, 0));
+        visible.add((Position) offsetFromPlayer(-1, 1));
+        visible.add((Position) offsetFromPlayer(0, 1));
+        visible.add((Position) offsetFromPlayer(1, 1));
+        visible.add((Position) offsetFromPlayer(1, 0));
+        visible.add((Position) offsetFromPlayer(0, 2));
 
         return visible;
     }
