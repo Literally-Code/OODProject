@@ -7,6 +7,7 @@ import com.wss.items.Food;
 import com.wss.items.Gold;
 import com.wss.items.Trader;
 import com.wss.items.Water;
+import com.wss.spacial.Position;
 import com.wss.spacial.Size;
 
 public class MapGrid {
@@ -31,6 +32,16 @@ public class MapGrid {
     public Size getSize()
     {
         return this.size;
+    }
+
+    public boolean isValid(Position pos)
+    {
+        return (pos.row <= this.size.getHeight()) && (pos.col < this.size.getWidth());
+    }
+
+    public Square getSquare(Position pos)
+    {
+        return this.tiles[pos.row * this.size.getWidth() + pos.col];
     }
 
     public void setSize(int width, int height)
@@ -64,17 +75,19 @@ public class MapGrid {
             {
                 noiseResult = 1 + ImprovedNoise.noise(w + this.seed, h + this.seed, 2.0);
                 
+                Position tilePos = new Position(w, h);
+
                 if (noiseResult < 0.7 + difficultyBias)
                 {
-                    this.tiles[w + h * rowSize] = new Square(this, TerrainType.WATER);
+                    this.tiles[w + h * rowSize] = new Square(this, tilePos, TerrainType.WATER);
                 }
                 else if (noiseResult < 1 + difficultyBias)
                 {
-                    this.tiles[w + h * rowSize] = new Square(this, TerrainType.SAND);
+                    this.tiles[w + h * rowSize] = new Square(this, tilePos, TerrainType.SAND);
                 }
                 else
                 {
-                    this.tiles[w + h * rowSize] = new Square(this, TerrainType.GRASS);
+                    this.tiles[w + h * rowSize] = new Square(this, tilePos, TerrainType.GRASS);
                 }
             }
         }

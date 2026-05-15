@@ -39,7 +39,7 @@ public abstract class Vision {
 
     public Path easiestPath() {
         return getVisibleSquares().stream()
-                .min(Comparator.comparingInt(Square::getMovementCost))
+                .min(Comparator.comparingDouble(Square::getMovementCost))
                 .map(s -> buildPath(playerPos, s.getPosition()))
                 .orElse(new Path());
     }
@@ -76,8 +76,8 @@ public abstract class Vision {
         if (candidates.isEmpty()) return new Path();
 
         candidates.sort(Comparator
-                .comparingInt(s -> s.distanceFrom(playerPos))
-                .thenComparingInt(Square::getMovementCost)
+                .<Square>comparingDouble(s -> s.distanceFrom(playerPos))
+                .thenComparingDouble(Square::getMovementCost)
                 .thenComparing((Square s) -> -s.getPosition().col)
         );
 
@@ -92,8 +92,8 @@ public abstract class Vision {
         if (candidates.size() < 2) return new Path();
 
         candidates.sort(Comparator
-                .comparingInt(s -> s.distanceFrom(playerPos))
-                .thenComparingInt(Square::getMovementCost)
+                .<Square>comparingDouble(s -> s.distanceFrom(playerPos))
+                .thenComparingDouble(Square::getMovementCost)
                 .thenComparing((Square s) -> -s.getPosition().col)
         );
 

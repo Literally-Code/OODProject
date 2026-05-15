@@ -8,6 +8,7 @@ import com.wss.items.Gold;
 import com.wss.items.Items;
 import com.wss.items.Trader;
 import com.wss.items.Water;
+import com.wss.spacial.Position;
 
 record TerrainData(double energyCost, double foodCost, double waterCos, char renderChar) {}
 
@@ -34,8 +35,9 @@ public class Square {
     private String[] localMap;
     private boolean itemsChanged;
     private MapGrid map;
+    private Position pos;
 
-    public Square(MapGrid map)
+    public Square(MapGrid map, Position pos)
     {
         this.type = TerrainType.GRASS;
         this.map = map;
@@ -44,18 +46,19 @@ public class Square {
         Arrays.fill(this.localMap, Character.toString(this.getRenderChar()));
         this.itemsChanged = true;
         this.items = new Items[0];
+        this.pos = pos.clone();
     }
 
-    public Square(MapGrid map, TerrainType type)
+    public Square(MapGrid map, Position pos, TerrainType type)
     {
-        this(map);
+        this(map, pos);
         this.type = type;
         Arrays.fill(this.localMap, Character.toString(this.getRenderChar()));
     }
 
-    public Square(MapGrid map, TerrainType type, Items[] items)
+    public Square(MapGrid map, Position pos, TerrainType type, Items[] items)
     {
-        this(map, type);
+        this(map, pos, type);
         this.items = items.clone();
         this.itemsChanged = true;
         this.type = type;
@@ -102,6 +105,16 @@ public class Square {
 
             tile.itemsChanged = false;
         }
+    }
+
+    public double getMovementCost()
+    {
+        return this.type.getData().energyCost();
+    }
+
+    public double distanceFrom(Position from)
+    {
+        return this.pos.distanceFrom(from);
     }
 
     public static void renderTile(Square tile, int row, int col)
@@ -179,6 +192,11 @@ public class Square {
     public char getRenderChar()
     {
         return this.type.getData().renderChar();
+    }
+
+    public Position getPosition()
+    {
+        return this.pos;
     }
 
     public void printItems()
