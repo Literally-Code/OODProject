@@ -8,6 +8,7 @@ public class Trader extends Items {
         super("Trader", true);
         this.interest = interest;
         this.dangerLevel = dangerLevel;
+        this.sprite = "T";
     }
 
     public TradeOffer counterTrade(TradeOffer offer) {
@@ -21,6 +22,12 @@ public class Trader extends Items {
                 offer.getFoodRequested(),
                 offer.getWaterRequested()
         );
+    }
+    public Trader() {
+        super("Trader", true);
+        this.interest = 5;
+        this.dangerLevel = 3;
+        this.sprite = "T";
     }
 
     public void acceptTrade() {
