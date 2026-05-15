@@ -3,10 +3,12 @@ package com.wss.items;
 public class Items {
     protected String name;
     protected boolean repeating;
+    protected char sprite;
 
     public Items(String name, boolean repeating) {
         this.name = name;
         this.repeating = repeating;
+        this.sprite = 'X'; // Default value
     }
 
     public String getName() {
@@ -15,5 +17,10 @@ public class Items {
 
     public boolean isRepeating() {
         return repeating;
+    }
+
+    public char getSprite()
+    {
+        return this.sprite;
     }
 }

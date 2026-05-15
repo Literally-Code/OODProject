@@ -6,6 +6,7 @@ public class Food extends Items {
     public Food(int amount, boolean repeating) {
         super("Food", repeating);
         this.amount = amount;
+        this.sprite = 'F';
     }
 
     public int getAmount() {

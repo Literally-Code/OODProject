@@ -1,5 +1,7 @@
 package com.wss.map;
 
+import java.util.Arrays;
+
 import com.wss.items.Food;
 import com.wss.items.Gold;
 import com.wss.items.Items;
@@ -49,13 +51,28 @@ public class Square {
     {
         int transformedRow = res * row;
         int transformedCol = res * col;
+
+        char[] localMap = new char[res * res];
+        Arrays.fill(localMap, tile.getRenderChar());
+
+        if (tile.hasItems())
+        {
+            for (Items item : tile.items)
+            {
+                if (item.getSprite())
+                {
+                    
+                }
+            }
+        }
+
         for (int w = 0; w < res; w++)
         {
             System.out.printf("\u001b[%d;%dH", transformedRow + w + 1, transformedCol + 1);
 
             for (int h = 0; h < res; h++)
             {
-                System.out.print(tile.getRenderChar());
+                System.out.print(localMap[res * w + h]);
             }
             System.out.printf("\u001b[%d;1H", transformedRow + res + 1);
         }

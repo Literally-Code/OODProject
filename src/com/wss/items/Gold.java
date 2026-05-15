@@ -6,6 +6,7 @@ public class Gold extends Items {
     public Gold(int amount, boolean repeating) {
         super("Gold", repeating);
         this.amount = amount;
+        this.sprite = 'G';
     }
 
     public int getAmount() {
