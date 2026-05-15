@@ -4,7 +4,7 @@ import com.wss.player.vision.Vision;
 import com.wss.spacial.Path;
 
 
-public class BalancedBrain {
+public class BalancedBrain extends Brain{
     public BalancedBrain()
     {}
 

@@ -158,4 +158,14 @@ public class Player {
     {
         gold = value;
     }
+
+    public void setVision(Vision vision)
+    {
+        eye = vision;
+    }
+
+    public void setBrain(Brain brain)
+    {
+        this.brain = brain;
+    }
 }
