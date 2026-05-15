@@ -2,7 +2,6 @@ package com.wss.player;
 
 //More strength, less food and water
 public class EnergeticPlayer extends Player{
-    private int maxStrength, maxWater, maxFood;
 
     public EnergeticPlayer()
     {

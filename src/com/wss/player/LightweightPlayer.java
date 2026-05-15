@@ -2,7 +2,6 @@ package com.wss.player;
 
 //Less strength, more food and water
 public class LightweightPlayer extends Player{
-    private int maxStrength, maxWater, maxFood;
 
     public LightweightPlayer()
     {
