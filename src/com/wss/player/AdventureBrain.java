@@ -3,43 +3,48 @@ package com.wss.player;
 import com.wss.player.vision.Vision;
 import com.wss.spacial.Path;
 
-public class AdventureBrain extends Brain{
-    public AdventureBrain()
-    {}
+public class AdventureBrain extends Brain {
 
-    //prioritizes moving east, doesn't like to stay in one spot
+    public AdventureBrain()
+    {
+
+    }
+
+    @Override
     public Path makeMove(Vision eye, int[] stats)
     {
-        //If strength gets low enough, player must rest
         if(stats[0] < 15)
-            return null;
-
-        int sufficient = 0;
-        //Omit gold
-        for(int i = 0; i < stats.length-1; i++)
         {
-            if(i >= 50)
-                sufficient++;
+            return null;
         }
 
-        //If more than 2 stats are sufficient, keep moving
-        if(sufficient > 2)
-            return eye.easiestPath();
+        if(stats[1] < 25)
+        {
+            Path water = eye.closestWater();
 
-        //If stats are not sufficient, then find paths in this order
-        Path food = eye.closestFood();
-        Path water = eye.closestWater();
-        Path trader = eye.closestTrader();
+            if(water != null)
+            {
+                return water;
+            }
+        }
+
+        if(stats[2] < 25)
+        {
+            Path food = eye.closestFood();
+
+            if(food != null)
+            {
+                return food;
+            }
+        }
+
         Path gold = eye.closestGold();
 
-        Path[] paths = {food, water, trader, gold};
-        for(int i = 0; i < paths.length; i++)
+        if(gold != null && stats[3] < 5)
         {
-            if(paths[i] != null)
-                return paths[i];
+            return gold;
         }
 
-        //No collectables? Keep moving
         return eye.easiestPath();
     }
 }

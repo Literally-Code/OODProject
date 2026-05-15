@@ -1,142 +1,587 @@
 package com.wss.player;
+
+import com.wss.Trade;
+import com.wss.items.Food;
+import com.wss.items.Gold;
+import com.wss.items.Items;
+import com.wss.items.Trader;
+import com.wss.items.Water;
+import com.wss.map.MapGrid;
+import com.wss.map.Square;
+import com.wss.player.vision.*;
+import com.wss.spacial.Path;
+import com.wss.spacial.Position;
 import java.util.Scanner;
 
-import com.wss.items.Items;
-import com.wss.map.MapGrid;
-import com.wss.Trade;
-import com.wss.spacial.Path;
-import com.wss.player.vision.*;
-import com.wss.spacial.Position;
-
-/*
-*
-*   If the Food and Water class's bonus values aren't its values then this might need some fixing :grimace:
-*
-*/
-
 public class Player {
-    private int currStrength, currWater, currFood, gold;
-    protected int maxStrength, maxWater, maxFood;
+
+    private int currStrength;
+
+    private int currWater;
+
+    private int currFood;
+
+    private int gold;
+
+    protected int maxStrength;
+
+    protected int maxWater;
+
+    protected int maxFood;
+
     private Vision eye;
+
     private Brain brain;
+
+    private MapGrid map;
+
     private Position initialPos;
+
+    private Position currentPos;
+
+    private Position previousPos;
+
+    private Scanner scnr =
+        new Scanner(System.in);
 
     public Player()
     {
-        
+
     }
 
-    public Player(int str, int water, int food)
+    public Player(
+        int str,
+        int water,
+        int food
+    )
     {
         maxStrength = str;
+
         maxWater = water;
+
         maxFood = food;
 
         currStrength = maxStrength;
+
         currWater = maxWater;
+
         currFood = maxFood;
+
         gold = 5;
     }
 
-    //I haven't figured this one out yet o_o
-    public void initialize(MapGrid map, Brain brain, Vision vision)
+    public void initialize(
+        MapGrid map,
+        Brain brain,
+        Vision vision
+    )
     {
-        initialPos = new Position(0, 0);
+        this.map = map;
+
+        initialPos =
+            new Position(0, 0);
+
+        currentPos =
+            initialPos;
+
+        previousPos = null;
+
         eye = vision;
+
         this.brain = brain;
+
+        eye.setPlayerPosition(currentPos);
+    }
+
+    public Trade suggestTrade()
+    {
+        float foodOffer;
+
+        float waterOffer;
+
+        float goldOffer;
+
+        Trade offer = null;
+
+        System.out.println(
+            "Suggesting a Trade..."
+        );
+
+        System.out.println(
+            "Please enter the amount of each item you want to receive:"
+        );
+
+        System.out.print("Food: ");
+
+        foodOffer =
+            scnr.nextFloat();
+
+        System.out.print("Water: ");
+
+        waterOffer =
+            scnr.nextFloat();
+
+        System.out.print("Gold Offered: ");
+
+        goldOffer =
+            scnr.nextFloat();
+
+        while(gold < goldOffer)
+        {
+            System.out.println(
+                "Insufficient gold. Try another value:"
+            );
+
+            goldOffer =
+                scnr.nextFloat();
+        }
+
+        return offer;
+    }
+
+    public void acceptTrade(Trade offer)
+    {
+
+    }
+
+    public boolean rejectTrade()
+    {
+        String counter;
+
+        System.out.println(
+            "Trade Rejected. Suggest a counteroffer? (y/n): "
+        );
+
+        counter =
+            scnr.next();
+
+        return counter.equalsIgnoreCase("y");
+    }
+
+    public void collectBonus(Items bonus)
+    {
+        applyItem(bonus);
     }
 
     /*
-    *   suggestTrade() asks the player for the amount of food and water they want to receive and the price (gold) they
-    *   are willing to pay for it. Returns the trade offer as a Trade object
-    */
-    public Trade suggestTrade()
-    {
-        Scanner scnr = new Scanner(System.in);
-        float foodOffer, waterOffer, goldOffer;
-        Trade offer = null;
+     * AI movement
+     */
 
-        System.out.println("Suggesting a Trade... Please enter the amount of each item you want to receive: ");
-        
-        System.out.print("Food: ");
-        foodOffer = scnr.nextFloat();
-
-        System.out.print("Water: ");
-        waterOffer = scnr.nextFloat();
-
-        System.out.println("Please enter the amount of gold you are offering: ");
-        goldOffer = scnr.nextInt();
-        if(gold < goldOffer)
-            System.out.print("Insufficient gold. Try another value: ");
-        //If the player's current gold value is less than the amount of gold they're offering, continue to prompt until valid
-        while(gold < goldOffer)         
-        {                                   
-            goldOffer = scnr.nextInt();
-            if(gold < goldOffer)
-                System.out.print("Insufficient gold. Try another value: ");
-        }
-
-        Items[] tradeOffer = new Items[2];
-        //Food foodTrade = new Food(foodOffer);
-        //Water waterTrade = new Water(waterOffer);
-
-        //offer = new Trade(goldOffer, tradeOffer);
-
-        scnr.close();
-        return offer;
-
-    }
-
-    //acceptTrade() calls collectBonus to collect items from a trade
-    public void acceptTrade(Trade offer)
-    {
-        //Get the Item array from offer and gain the bonuses of each item in the array
-    }
-
-    //rejectTrade asks if the player wants to suggest a counteroffer after rejecting. Returns true if the player wants to counter 
-    public boolean rejectTrade()
-    {
-        Scanner scnr = new Scanner(System.in);
-        String counter;
-
-        System.out.println("Trade Rejected. Suggest a counteroffer? (y/n): ");
-        counter = scnr.next();
-        scnr.close();
-
-        if(counter.equalsIgnoreCase("y"))
-            return true;
-        else if(counter.equalsIgnoreCase("n"))
-            return false;
-        else
-            return false;
-    }
-
-    //it's in the name
-    public void collectBonus(Items bonus)
-    {
-        //wait how will it distinguish between item types.....
-        float someArbitraryValue = 0; // item bonus value
-        if(someArbitraryValue + currFood > maxFood)
-            currFood = maxFood;
-        if(someArbitraryValue + currWater > maxWater)
-            currWater = maxWater;
-        
-        gold = (int) someArbitraryValue;
-            
-    }
-    
-    //makeMove() calls makeMove() in the Brain object
     public Path makeMove()
     {
-        int[] stats = {currStrength, currWater, currFood, gold};
-        Path somePathObject = brain.makeMove(eye, stats);
-        //if the path = 0
-            if(currStrength + 5 > maxStrength)
-                currStrength = maxStrength;
-            else
-                currStrength += 5; //Or some value idk yet
+        if(brain == null || eye == null)
+        {
+            System.out.println(
+                "Brain or Vision not initialized."
+            );
 
-        return somePathObject;
+            return null;
+        }
+
+        if(!isAlive())
+        {
+            System.out.println(
+                "Player can no longer continue."
+            );
+
+            return null;
+        }
+
+        eye.setPlayerPosition(currentPos);
+
+        int[] stats = {
+            currStrength,
+            currWater,
+            currFood,
+            gold
+        };
+
+        Path path =
+            brain.makeMove(eye, stats);
+
+        if(path == null)
+        {
+            rest();
+
+            return null;
+        }
+
+        if(
+            path.getMoves() == null ||
+            path.getMoves().isEmpty()
+        )
+        {
+            System.out.println(
+                "No valid moves found."
+            );
+
+            return null;
+        }
+
+        Position nextMove =
+            path.getMoves().get(0);
+
+        if(
+            previousPos != null &&
+            nextMove.getRow() ==
+                previousPos.getRow() &&
+            nextMove.getCol() ==
+                previousPos.getCol()
+        )
+        {
+            Path alternatePath =
+                eye.easiestPath();
+
+            if(
+                alternatePath != null &&
+                alternatePath.getMoves() != null &&
+                !alternatePath.getMoves().isEmpty()
+            )
+            {
+                nextMove =
+                    alternatePath
+                        .getMoves()
+                        .get(0);
+            }
+        }
+
+        moveTo(nextMove);
+
+        return path;
+    }
+
+    /*
+     * Manual player movement
+     */
+
+    public Path makeManualMove(
+        Scanner input
+    )
+    {
+        if(!isAlive())
+        {
+            System.out.println(
+                "Player can no longer continue."
+            );
+
+            return null;
+        }
+
+        System.out.print(
+            "Enter move (W/A/S/D or R to rest): "
+        );
+
+        String choice =
+            input.next();
+
+        /*
+         * Manual resting
+         */
+
+        if(choice.equalsIgnoreCase("r"))
+        {
+            rest();
+
+            return null;
+        }
+
+        int nextRow =
+            currentPos.getRow();
+
+        int nextCol =
+            currentPos.getCol();
+
+        if(choice.equalsIgnoreCase("w"))
+        {
+            nextRow--;
+        }
+        else if(choice.equalsIgnoreCase("s"))
+        {
+            nextRow++;
+        }
+        else if(choice.equalsIgnoreCase("a"))
+        {
+            nextCol--;
+        }
+        else if(choice.equalsIgnoreCase("d"))
+        {
+            nextCol++;
+        }
+        else
+        {
+            System.out.println(
+                "Invalid move. Player rests instead."
+            );
+
+            rest();
+
+            return null;
+        }
+
+        if(!isValidPosition(nextRow, nextCol))
+        {
+            System.out.println(
+                "Cannot move outside the map. Player rests instead."
+            );
+
+            rest();
+
+            return null;
+        }
+
+        Position nextMove =
+            new Position(
+                nextRow,
+                nextCol
+            );
+
+        Path path =
+            new Path();
+
+        path.addMove(nextMove);
+
+        moveTo(nextMove);
+
+        return path;
+    }
+
+    private boolean isValidPosition(
+        int row,
+        int col
+    )
+    {
+        return row >= 0 &&
+               row < map.getSize().getHeight() &&
+               col >= 0 &&
+               col < map.getSize().getWidth();
+    }
+
+    private void moveTo(Position nextMove)
+    {
+        previousPos =
+            currentPos;
+
+        currentPos =
+            nextMove;
+
+        eye.setPlayerPosition(currentPos);
+
+        applyTerrainCost();
+
+        collectItemsOnCurrentSquare();
+
+        System.out.println(
+            "Player moved to: " + currentPos
+        );
+
+        printStats();
+    }
+
+    private void applyTerrainCost()
+    {
+        Square square =
+            map.getSquare(currentPos);
+
+        currStrength -=
+            square.getStrengthCost();
+
+        currFood -=
+            square.getFoodCost();
+
+        int waterCost =
+            square.getWaterCost();
+
+        if(waterCost < 0)
+        {
+            currWater =
+                Math.min(
+                    maxWater,
+                    currWater + Math.abs(waterCost)
+                );
+        }
+        else
+        {
+            currWater -= waterCost;
+        }
+
+        clampStats();
+    }
+
+    private void collectItemsOnCurrentSquare()
+    {
+        Square square =
+            map.getSquare(currentPos);
+
+        if(!square.hasItems())
+        {
+            return;
+        }
+
+        Items[] collectedItems =
+            square.collectItems();
+
+        for(Items item : collectedItems)
+        {
+            applyItem(item);
+        }
+    }
+
+    private void applyItem(Items item)
+    {
+        if(item instanceof Food)
+        {
+            Food food =
+                (Food)item;
+
+            currFood =
+                Math.min(
+                    maxFood,
+                    currFood + food.getAmount()
+                );
+
+            System.out.println(
+                "Collected food. Food is now " +
+                currFood + "."
+            );
+        }
+        else if(item instanceof Water)
+        {
+            Water water =
+                (Water)item;
+
+            currWater =
+                Math.min(
+                    maxWater,
+                    currWater + water.getAmount()
+                );
+
+            System.out.println(
+                "Collected water. Water is now " +
+                currWater + "."
+            );
+        }
+        else if(item instanceof Gold)
+        {
+            Gold collectedGold =
+                (Gold)item;
+
+            gold +=
+                collectedGold.getAmount();
+
+            System.out.println(
+                "Collected gold. Gold is now " +
+                gold + "."
+            );
+        }
+        else if(item instanceof Trader)
+        {
+            tradeWithTrader();
+        }
+    }
+
+    private void tradeWithTrader()
+    {
+        int tradeCost = 5;
+
+        if(gold >= tradeCost)
+        {
+            gold -= tradeCost;
+
+            currFood =
+                Math.min(
+                    maxFood,
+                    currFood + 20
+                );
+
+            currWater =
+                Math.min(
+                    maxWater,
+                    currWater + 20
+                );
+
+            System.out.println(
+                "Traded 5 gold for food and water."
+            );
+        }
+        else
+        {
+            System.out.println(
+                "Found a trader, but not enough gold to trade."
+            );
+        }
+    }
+
+    /*
+     * Resting restores strength
+     * but consumes food/water.
+     */
+
+    private void rest()
+    {
+        currStrength =
+            Math.min(
+                maxStrength,
+                currStrength + 10
+            );
+
+        currFood -= 1;
+
+        currWater -= 1;
+
+        clampStats();
+
+        System.out.println(
+            "Player is resting."
+        );
+
+        printStats();
+    }
+
+    private void clampStats()
+    {
+        currStrength =
+            Math.max(
+                0,
+                Math.min(maxStrength, currStrength)
+            );
+
+        currFood =
+            Math.max(
+                0,
+                Math.min(maxFood, currFood)
+            );
+
+        currWater =
+            Math.max(
+                0,
+                Math.min(maxWater, currWater)
+            );
+    }
+
+    public boolean isAlive()
+    {
+        return currStrength > 0 &&
+               currFood > 0 &&
+               currWater > 0;
+    }
+
+    public void printStats()
+    {
+        System.out.println(
+            "Stats -> Strength: " +
+            currStrength +
+            ", Water: " +
+            currWater +
+            ", Food: " +
+            currFood +
+            ", Gold: " +
+            gold
+        );
+    }
+
+    public Position getCurrentPosition()
+    {
+        return currentPos;
     }
 
     public void setStrength(int value)

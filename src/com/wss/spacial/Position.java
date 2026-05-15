@@ -1,17 +1,26 @@
 package com.wss.spacial;
 
 public class Position {
-    public int row;
-    public int col;
-    
-    public Position(int row, int col)
-    {
+
+    public final int row;
+    public final int col;
+
+    public Position(int row, int col) {
+
         this.row = row;
         this.col = col;
     }
 
-    public int[] getPosition()
-    {
+    public int getRow() {
+        return row;
+    }
+
+    public int getCol() {
+        return col;
+    }
+
+    public int[] getPosition() {
+
         int[] pos = {row, col};
         return pos;
     }
@@ -24,5 +33,10 @@ public class Position {
     public Position clone()
     {
         return new Position(row, col);
+    }
+
+    @Override
+    public String toString() {
+        return "(" + row + ", " + col + ")";
     }
 }

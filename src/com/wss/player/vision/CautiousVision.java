@@ -1,13 +1,10 @@
 package com.wss.player.vision;
 
-import java.util.*;
 import com.wss.map.MapGrid;
-import com.wss.map.Square;
 import com.wss.spacial.Position;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Sees north, south, and east of the player.
- */
 public class CautiousVision extends Vision {
 
     public CautiousVision(MapGrid map, Position pos) {
@@ -15,23 +12,13 @@ public class CautiousVision extends Vision {
     }
 
     @Override
-    public List<Square> getVisibleSquares() {
-        List<Square> visible = new ArrayList<>();
+    protected List<Position> getVisiblePositions() {
 
-        int[][] dirs = {
-                {-1, 0}, // north
-                {1, 0},  // south
-                {0, 1}   // east
-        };
+        List<Position> visible = new ArrayList<>();
 
-        for (int[] d : dirs) {
-            int[] tempPos = playerPos.getPosition();
-            Position newPos = new Position(tempPos[0] + d[0], tempPos[1] + d[1]);
-
-            if (map.isValid(newPos)) {
-                visible.add(map.getSquare(newPos));
-            }
-        }
+        visible.add((Position) offsetFromPlayer(-1, 0));
+        visible.add((Position) offsetFromPlayer(0, 1));
+        visible.add((Position) offsetFromPlayer(1, 0));
 
         return visible;
     }
