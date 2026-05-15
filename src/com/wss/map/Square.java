@@ -1,6 +1,7 @@
 package com.wss.map;
 
 import java.util.Arrays;
+import java.util.Random;
 
 import com.wss.items.Food;
 import com.wss.items.Gold;
@@ -30,41 +31,69 @@ enum TerrainType {
 public class Square {
     private Items[] items;
     private TerrainType type;
+    private char[] localMap;
+    private boolean itemsChanged;
+    private MapGrid map;
 
-    public Square()
+    public Square(MapGrid map)
     {
         this.type = TerrainType.GRASS;
+        this.map = map;
+        int res = map.getResolution();
+        this.localMap = new char[res * res];
+        Arrays.fill(this.localMap, this.getRenderChar());
+        this.itemsChanged = false;
     }
 
-    public Square(TerrainType type)
+    public Square(MapGrid map, TerrainType type)
     {
+        this(map);
         this.type = type;
+        Arrays.fill(this.localMap, this.getRenderChar());
     }
 
-    public Square(Items[] items, TerrainType type)
+    public Square(MapGrid map, TerrainType type, Items[] items)
     {
+        this(map, type);
         this.items = items.clone();
-        this.type = TerrainType.GRASS;
+        this.itemsChanged = true;
     }
 
-    public static void renderTile(Square tile, int res, int row, int col)
+    public static void updateTile(Square tile)
     {
-        int transformedRow = res * row;
-        int transformedCol = res * col;
-
-        char[] localMap = new char[res * res];
-        Arrays.fill(localMap, tile.getRenderChar());
-
-        if (tile.hasItems())
+        if (tile.itemsChanged)
         {
-            for (Items item : tile.items)
+            Arrays.fill(tile.localMap, tile.getRenderChar());
+
+            if (tile.hasItems())
             {
-                if (item.getSprite())
+                for (int i = 0; i < tile.items.length && i < tile.localMap.length - 1; i++)
                 {
-                    
+                    Items item = tile.items[i];
+
+                    // Choose a random point in the tile's local render map
+                    Random random = new Random();
+                    int randIndex = random.nextInt(tile.localMap.length + 1);
+
+                    // Cycle the random index if it lands on a non-terrain character
+                    while (tile.localMap[randIndex] != tile.getRenderChar())
+                    {
+                        randIndex = randIndex < tile.localMap.length ? randIndex + 1 : 0;
+                    }
+
+                    tile.localMap[randIndex] = item.getSprite();
                 }
             }
+
+            tile.itemsChanged = false;
         }
+    }
+
+    public static void renderTile(Square tile, int row, int col)
+    {
+        int res = tile.map.getResolution();
+        int transformedRow = res * row;
+        int transformedCol = res * col;
 
         for (int w = 0; w < res; w++)
         {
@@ -72,7 +101,7 @@ public class Square {
 
             for (int h = 0; h < res; h++)
             {
-                System.out.print(localMap[res * w + h]);
+                System.out.print(tile.localMap[res * w + h]);
             }
             System.out.printf("\u001b[%d;1H", transformedRow + res + 1);
         }

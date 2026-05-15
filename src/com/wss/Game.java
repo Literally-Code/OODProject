@@ -52,7 +52,7 @@ public class Game implements Runnable {
 
     public void update()
     {
-        
+        this.map.updateTerrain();
     }
 
     public void input()
@@ -135,7 +135,7 @@ public class Game implements Runnable {
                 int height = Integer.parseInt(splitInput[1]);
 
                 Size mapSize = new Size(width, height);
-                this.map = new MapGrid(mapSize, Math.random());
+                this.map = new MapGrid(mapSize, Math.random(), 3);
                 this.map.genTerrain(this.gameDifficulty);
                 inputSuccess = true;
             } catch (Exception e) {
