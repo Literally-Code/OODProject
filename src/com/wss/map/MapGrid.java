@@ -46,6 +46,11 @@ public class MapGrid {
         return this.size;
     }
 
+    public boolean isValid(Position pos)
+    {
+        return (pos.row <= this.size.getHeight()) && (pos.col < this.size.getWidth());
+    }
+
     public void setSize(int width, int height)
     {
         this.size =
@@ -95,6 +100,8 @@ public class MapGrid {
         {
             for(int col = 0; col < width; col++)
             {
+                Position tilePos = new Position(row, col);
+
                 noiseResult =
                     1 + ImprovedNoise.noise(
                         col + this.seed,
@@ -107,6 +114,7 @@ public class MapGrid {
                     this.tiles[col + row * width] =
                         new Square(
                             this,
+                            tilePos,
                             TerrainType.WATER
                         );
                 }
@@ -115,6 +123,7 @@ public class MapGrid {
                     this.tiles[col + row * width] =
                         new Square(
                             this,
+                            tilePos,
                             TerrainType.SAND
                         );
                 }
@@ -123,6 +132,7 @@ public class MapGrid {
                     this.tiles[col + row * width] =
                         new Square(
                             this,
+                            tilePos,
                             TerrainType.GRASS
                         );
                 }
@@ -177,9 +187,12 @@ public class MapGrid {
             int index =
                 rand.nextInt(tiles.length);
 
+            Position oldPos = tiles[index].getPosition();
+
             tiles[index] =
                 new Square(
                     this,
+                    oldPos,
                     TerrainType.GRASS
                 );
 
@@ -191,9 +204,12 @@ public class MapGrid {
             int index =
                 rand.nextInt(tiles.length);
 
+            Position oldPos = tiles[index].getPosition();
+
             tiles[index] =
                 new Square(
                     this,
+                    oldPos,
                     TerrainType.SAND
                 );
 

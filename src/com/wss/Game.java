@@ -280,11 +280,28 @@ public class Game implements Runnable {
         );
     }
 
-    private void clearConsole()
+    public static void clearConsole() 
     {
-        for(int i = 0; i < 30; i++)
-        {
-            System.out.println();
+        try {
+            System.out.print("\033[H\033[2J");
+            System.out.flush();
+            
+            String os = System.getProperty("os.name").toLowerCase();
+            if (os.contains("win")) {
+                new ProcessBuilder("cmd", "/c", "cls")
+                    .inheritIO()
+                    .start()
+                    .waitFor();
+            } else {
+                new ProcessBuilder("clear")
+                    .inheritIO()
+                    .start()
+                    .waitFor();
+            }
+        } catch (Exception e) {
+            for (int i = 0; i < 50; i++) {
+                System.out.println();
+            }
         }
     }
 
