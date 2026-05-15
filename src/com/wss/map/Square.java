@@ -31,7 +31,7 @@ enum TerrainType {
 public class Square {
     private Items[] items;
     private TerrainType type;
-    private char[] localMap;
+    private String[] localMap;
     private boolean itemsChanged;
     private MapGrid map;
 
@@ -40,16 +40,17 @@ public class Square {
         this.type = TerrainType.GRASS;
         this.map = map;
         int res = map.getResolution();
-        this.localMap = new char[res * res];
-        Arrays.fill(this.localMap, this.getRenderChar());
-        this.itemsChanged = false;
+        this.localMap = new String[res * res];
+        Arrays.fill(this.localMap, Character.toString(this.getRenderChar()));
+        this.itemsChanged = true;
+        this.items = new Items[0];
     }
 
     public Square(MapGrid map, TerrainType type)
     {
         this(map);
         this.type = type;
-        Arrays.fill(this.localMap, this.getRenderChar());
+        Arrays.fill(this.localMap, Character.toString(this.getRenderChar()));
     }
 
     public Square(MapGrid map, TerrainType type, Items[] items)
@@ -57,13 +58,27 @@ public class Square {
         this(map, type);
         this.items = items.clone();
         this.itemsChanged = true;
+        this.type = type;
+    }
+
+    public void addItem(Items item)
+    {
+        Items[] newItems = new Items[this.items.length + 1];
+
+        for (int i = 0; i < this.items.length; i++)
+        {
+            newItems[i] = this.items[i];
+        }
+
+        newItems[newItems.length - 1] = item;
+        this.items = newItems;
     }
 
     public static void updateTile(Square tile)
     {
         if (tile.itemsChanged)
         {
-            Arrays.fill(tile.localMap, tile.getRenderChar());
+            Arrays.fill(tile.localMap, Character.toString(tile.getRenderChar()));
 
             if (tile.hasItems())
             {
@@ -73,12 +88,12 @@ public class Square {
 
                     // Choose a random point in the tile's local render map
                     Random random = new Random();
-                    int randIndex = random.nextInt(tile.localMap.length + 1);
+                    int randIndex = random.nextInt(tile.localMap.length);
 
                     // Cycle the random index if it lands on a non-terrain character
-                    while (tile.localMap[randIndex] != tile.getRenderChar())
+                    while (!tile.localMap[randIndex].equals(Character.toString(tile.getRenderChar())))
                     {
-                        randIndex = randIndex < tile.localMap.length ? randIndex + 1 : 0;
+                        randIndex = randIndex < tile.localMap.length - 1 ? randIndex + 1 : 0;
                     }
 
                     tile.localMap[randIndex] = item.getSprite();
@@ -103,6 +118,7 @@ public class Square {
             {
                 System.out.print(tile.localMap[res * w + h]);
             }
+
             System.out.printf("\u001b[%d;1H", transformedRow + res + 1);
         }
     }
@@ -114,15 +130,11 @@ public class Square {
 
     public boolean hasFood()
     {
-        if (!hasItems())
-        {
-            return false;
-        }
+        if (!hasItems()) return false;
 
-        for (Items item : items) {
-            if (item instanceof Food) {
-                return true;
-            }
+        for (Items item : items)
+        {
+            if (item instanceof Food) return true;
         }
 
         return false;
@@ -130,15 +142,11 @@ public class Square {
 
     public boolean hasWater()
     {
-        if (!hasItems())
-        {
-            return false;
-        }
+        if (!hasItems()) return false;
 
-        for (Items item : items) {
-            if (item instanceof Water) {
-                return true;
-            }
+        for (Items item : items)
+        {
+            if (item instanceof Water) return true;
         }
 
         return false;
@@ -146,15 +154,11 @@ public class Square {
 
     public boolean hasGold()
     {
-        if (!hasItems())
-        {
-            return false;
-        }
+        if (!hasItems()) return false;
 
-        for (Items item : items) {
-            if (item instanceof Gold) {
-                return true;
-            }
+        for (Items item : items)
+        {
+            if (item instanceof Gold) return true;
         }
 
         return false;
@@ -162,15 +166,11 @@ public class Square {
 
     public boolean hasTrader()
     {
-        if (!hasItems())
-        {
-            return false;
-        }
+        if (!hasItems()) return false;
 
-        for (Items item : items) {
-            if (item instanceof Trader) {
-                return true;
-            }
+        for (Items item : items)
+        {
+            if (item instanceof Trader) return true;
         }
 
         return false;
@@ -179,5 +179,17 @@ public class Square {
     public char getRenderChar()
     {
         return this.type.getData().renderChar();
+    }
+
+    public void printItems()
+    {
+    System.out.print("[ ");
+
+    for (Items item : items)
+        {
+        System.out.print(item.getClass().getSimpleName() + " ");
+        }
+
+    System.out.println("]");
     }
 }

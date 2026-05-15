@@ -3,12 +3,12 @@ package com.wss.items;
 public class Items {
     protected String name;
     protected boolean repeating;
-    protected char sprite;
+    protected String sprite;
 
     public Items(String name, boolean repeating) {
         this.name = name;
         this.repeating = repeating;
-        this.sprite = 'X'; // Default value
+        this.sprite = "X"; // Default value
     }
 
     public String getName() {
@@ -19,7 +19,7 @@ public class Items {
         return repeating;
     }
 
-    public char getSprite()
+    public String getSprite()
     {
         return this.sprite;
     }

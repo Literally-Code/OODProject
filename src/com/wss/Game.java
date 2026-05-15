@@ -23,6 +23,7 @@ public class Game implements Runnable {
         this.promptDifficulty();
         this.promptSize();
         this.promptAutoRun();
+        this.map.genItems();
         this.running = true;
 
         while (this.running)
@@ -42,6 +43,7 @@ public class Game implements Runnable {
             {
                 this.input();
             }
+            this.map.debugPrintItems();
         }
     }
 
