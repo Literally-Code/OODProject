@@ -2,6 +2,7 @@ package com.wss.player;
 import java.util.Scanner;
 
 import com.wss.items.Items;
+import com.wss.map.MapGrid;
 import com.wss.Trade;
 import com.wss.spacial.Path;
 import com.wss.player.vision.*;
@@ -15,7 +16,7 @@ import com.wss.spacial.Position;
 
 public class Player {
     private int currStrength, currWater, currFood, gold;
-    private int maxStrength, maxWater, maxFood;
+    protected int maxStrength, maxWater, maxFood;
     private Vision eye;
     private Brain brain;
     private Position initialPos;
@@ -38,9 +39,11 @@ public class Player {
     }
 
     //I haven't figured this one out yet o_o
-    public void initialize()
+    public void initialize(MapGrid map, Brain brain, Vision vision)
     {
         initialPos = new Position(0, 0);
+        eye = vision;
+        this.brain = brain;
     }
 
     /*

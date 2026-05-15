@@ -2,8 +2,7 @@ package com.wss.player;
 
 //Balanced between all stats
 public class StandardPlayer extends Player{
-    private int maxStrength, maxWater, maxFood;
-
+    
     public StandardPlayer()
     {
         maxStrength = 100;
