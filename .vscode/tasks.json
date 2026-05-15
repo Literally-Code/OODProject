@@ -4,7 +4,7 @@
         {
             "label": "Compile Java",
             "type": "shell",
-            "command": "javac -d out src/com/wss/*.java",
+            "command": "javac -d out -sourcepath src src/com/wss/Main.java",
             "group": {
                 "kind": "build",
                 "isDefault": true
