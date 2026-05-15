@@ -48,12 +48,14 @@ public class MapGrid {
 
     public void setSize(int width, int height)
     {
-        this.size = new Size(width, height);
+        this.size =
+            new Size(width, height);
     }
 
     public Square getSquare(Position position)
     {
-        int width = this.size.getWidth();
+        int width =
+            this.size.getWidth();
 
         return this.tiles[
             position.getCol() +
@@ -63,21 +65,24 @@ public class MapGrid {
 
     public void genTerrain(Difficulty difficulty)
     {
-        this.difficulty = difficulty;
+        this.difficulty =
+            difficulty;
 
-        int width = this.size.getWidth();
+        int width =
+            this.size.getWidth();
 
-        int height = this.size.getHeight();
+        int height =
+            this.size.getHeight();
 
         double difficultyBias;
 
         double noiseResult;
 
-        if (difficulty == Difficulty.Easy)
+        if(difficulty == Difficulty.Easy)
         {
             difficultyBias = -0.15;
         }
-        else if (difficulty == Difficulty.Medium)
+        else if(difficulty == Difficulty.Medium)
         {
             difficultyBias = 0.1;
         }
@@ -86,9 +91,9 @@ public class MapGrid {
             difficultyBias = 0.5;
         }
 
-        for (int row = 0; row < height; row++)
+        for(int row = 0; row < height; row++)
         {
-            for (int col = 0; col < width; col++)
+            for(int col = 0; col < width; col++)
             {
                 noiseResult =
                     1 + ImprovedNoise.noise(
@@ -97,7 +102,7 @@ public class MapGrid {
                         2.0
                     );
 
-                if (noiseResult < 0.7 + difficultyBias)
+                if(noiseResult < 0.7 + difficultyBias)
                 {
                     this.tiles[col + row * width] =
                         new Square(
@@ -105,7 +110,7 @@ public class MapGrid {
                             TerrainType.WATER
                         );
                 }
-                else if (noiseResult < 1 + difficultyBias)
+                else if(noiseResult < 1 + difficultyBias)
                 {
                     this.tiles[col + row * width] =
                         new Square(
@@ -125,16 +130,16 @@ public class MapGrid {
         }
 
         /*
-         * Prevent maps from generating
-         * with only one terrain type.
+         * Prevent maps from becoming
+         * one-terrain generation.
          */
 
         ensureTerrainVariety();
     }
 
     /*
-     * Guarantees some grass and sand
-     * tiles exist on every map.
+     * Ensures maps always contain
+     * some grass and sand.
      */
 
     private void ensureTerrainVariety()
@@ -198,13 +203,15 @@ public class MapGrid {
 
     public void updateTerrain()
     {
-        int width = this.size.getWidth();
+        int width =
+            this.size.getWidth();
 
-        int height = this.size.getHeight();
+        int height =
+            this.size.getHeight();
 
-        for (int row = 0; row < height; row++)
+        for(int row = 0; row < height; row++)
         {
-            for (int col = 0; col < width; col++)
+            for(int col = 0; col < width; col++)
             {
                 Square tile =
                     this.tiles[col + row * width];
@@ -216,15 +223,25 @@ public class MapGrid {
 
     public void genItems()
     {
-        Random rand = new Random();
+        Random rand =
+            new Random();
 
-        int width = this.size.getWidth();
+        int width =
+            this.size.getWidth();
 
-        int height = this.size.getHeight();
+        int height =
+            this.size.getHeight();
+
+        /*
+         * Difficulty scaling
+         */
 
         double traderChance;
+
         double goldChance;
+
         double waterChance;
+
         double foodChance;
 
         if(this.difficulty == Difficulty.Easy)
@@ -249,25 +266,27 @@ public class MapGrid {
             foodChance = 0.22;
         }
 
-        for (int row = 0; row < height; row++)
+        for(int row = 0; row < height; row++)
         {
-            for (int col = 0; col < width; col++)
+            for(int col = 0; col < width; col++)
             {
                 Square tile =
                     this.tiles[col + row * width];
 
-                boolean hasTrader = false;
+                boolean hasTrader =
+                    false;
 
-                for (
+                for(
                     int i = 0;
-                    i < this.resolution && !hasTrader;
+                    i < this.resolution &&
+                    !hasTrader;
                     i++
                 )
                 {
                     double chance =
                         rand.nextDouble();
 
-                    if (chance < traderChance)
+                    if(chance < traderChance)
                     {
                         tile.addItem(
                             new Trader()
@@ -275,19 +294,19 @@ public class MapGrid {
 
                         hasTrader = true;
                     }
-                    else if (chance < goldChance)
+                    else if(chance < goldChance)
                     {
                         tile.addItem(
                             new Gold()
                         );
                     }
-                    else if (chance < waterChance)
+                    else if(chance < waterChance)
                     {
                         tile.addItem(
                             new Water(5, true)
                         );
                     }
-                    else if (chance < foodChance)
+                    else if(chance < foodChance)
                     {
                         tile.addItem(
                             new Food(5, true)
@@ -296,21 +315,81 @@ public class MapGrid {
                 }
             }
         }
+
+        /*
+         * Ensure at least one trader
+         * exists on every map.
+         */
+
+        ensureMinimumResources();
     }
+
+    private void ensureMinimumResources()
+    {
+        Random rand =
+            new Random();
+
+        boolean hasTrader =
+            false;
+
+        for(Square tile : tiles)
+        {
+            if(tile.hasTrader())
+            {
+                hasTrader = true;
+                break;
+            }
+        }
+
+        if(!hasTrader)
+        {
+            int index =
+                rand.nextInt(tiles.length);
+
+            tiles[index].addItem(
+                new Trader()
+            );
+        }
+    }
+
+    /*
+     * Compact terrain rendering
+     * with visible items.
+     */
 
     public void renderTerrain(Position playerPos)
     {
-        int width = this.size.getWidth();
+        int width =
+            this.size.getWidth();
 
-        int height = this.size.getHeight();
+        int height =
+            this.size.getHeight();
 
         System.out.println("MAP");
 
-        for (int row = 0; row < height; row++)
+        /*
+         * Render priority:
+         *
+         * Player
+         * Trader
+         * Gold
+         * Food
+         * Water item
+         * Terrain
+         */
+
+        for(int row = 0; row < height; row++)
         {
-            for (int col = 0; col < width; col++)
+            for(int col = 0; col < width; col++)
             {
-                if (
+                Square tile =
+                    this.tiles[col + row * width];
+
+                /*
+                 * Player
+                 */
+
+                if(
                     playerPos != null &&
                     playerPos.getRow() == row &&
                     playerPos.getCol() == col
@@ -318,13 +397,49 @@ public class MapGrid {
                 {
                     System.out.print("P ");
                 }
+
+                /*
+                 * Trader
+                 */
+
+                else if(tile.hasTrader())
+                {
+                    System.out.print("T ");
+                }
+
+                /*
+                 * Gold
+                 */
+
+                else if(tile.hasGold())
+                {
+                    System.out.print("G ");
+                }
+
+                /*
+                 * Food
+                 */
+
+                else if(tile.hasFood())
+                {
+                    System.out.print("F ");
+                }
+
+                /*
+                 * Water item
+                 */
+
+                else if(tile.hasWater())
+                {
+                    System.out.print("W ");
+                }
+
+                /*
+                 * Terrain
+                 */
+
                 else
                 {
-                    Square tile =
-                        this.tiles[
-                            col + row * width
-                        ];
-
                     System.out.print(
                         tile.getRenderChar() + " "
                     );
@@ -337,15 +452,17 @@ public class MapGrid {
 
     public void debugPrintItems()
     {
-        int width = this.size.getWidth();
+        int width =
+            this.size.getWidth();
 
-        int height = this.size.getHeight();
+        int height =
+            this.size.getHeight();
 
         System.out.println("\nITEMS");
 
-        for (int row = 0; row < height; row++)
+        for(int row = 0; row < height; row++)
         {
-            for (int col = 0; col < width; col++)
+            for(int col = 0; col < width; col++)
             {
                 Square tile =
                     this.tiles[col + row * width];
@@ -356,8 +473,8 @@ public class MapGrid {
 
                 tile.printItems();
             }
-        }
 
-        System.out.println();
+            System.out.println();
+        }
     }
 }
