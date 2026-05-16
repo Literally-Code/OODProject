@@ -42,4 +42,12 @@ public class TradeOffer {
     public int getWaterRequested() {
         return waterRequested;
     }
+
+    public void printOffer()
+    {
+        System.out.println(String.format("Offer: %d food, %d water, %d gold\nRequest: %d food, %d water, %d gold", 
+            this.foodOffered, this.waterOffered, this.goldOffered,
+            this.foodRequested, this.waterRequested, this.goldRequested
+        ));
+    }
 }

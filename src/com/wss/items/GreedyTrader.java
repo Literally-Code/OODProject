@@ -4,6 +4,7 @@ public class GreedyTrader extends Trader {
 
     public GreedyTrader() {
         super(8, 4);
+        this.desiredGold += 30;
     }
 
     @Override

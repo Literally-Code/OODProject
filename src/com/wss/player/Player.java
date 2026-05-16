@@ -4,6 +4,7 @@ import com.wss.Trade;
 import com.wss.items.Food;
 import com.wss.items.Gold;
 import com.wss.items.Items;
+import com.wss.items.TradeOffer;
 import com.wss.items.Trader;
 import com.wss.items.Water;
 import com.wss.map.MapGrid;
@@ -93,48 +94,72 @@ public class Player {
         eye.setPlayerPosition(currentPos);
     }
 
-    public Trade suggestTrade()
+    public TradeOffer promptTradeOffer()
     {
-        float foodOffer;
+        int foodOffer;
+        int waterOffer;
+        int goldOffer;
 
-        float waterOffer;
-
-        float goldOffer;
-
-        Trade offer = null;
+        int foodRequest;
+        int waterRequest;
+        int goldRequest;
 
         System.out.println(
             "Suggesting a Trade..."
         );
 
         System.out.println(
+            "Please enter the amount of each item you want to offer:"
+        );
+
+        do {
+            System.out.print("Food: ");
+            foodOffer =
+                scnr.nextInt(); 
+                
+            if (foodOffer > this.currFood)
+            {
+                System.out.println("Insufficient food.");
+            }
+        } while (foodOffer > this.currFood);
+
+        do {
+            System.out.print("Water: ");
+            waterOffer =
+                scnr.nextInt(); 
+                
+            if (waterOffer > this.currWater)
+            {
+                System.out.println("Insufficient water.");
+            }
+        } while (waterOffer > this.currWater);
+
+        do {
+            System.out.print("Gold: ");
+            goldOffer =
+                scnr.nextInt(); 
+                
+            if (goldOffer > this.gold)
+            {
+                System.out.println("Insufficient gold.");
+            }
+        } while (goldOffer > this.gold);
+
+
+        System.out.println(
             "Please enter the amount of each item you want to receive:"
         );
 
         System.out.print("Food: ");
-
-        foodOffer =
-            scnr.nextFloat();
-
+        foodRequest = scnr.nextInt();
+        
         System.out.print("Water: ");
-
-        waterOffer =
-            scnr.nextFloat();
-
-        System.out.print("Gold Offered: ");
-
-        goldOffer =
-            scnr.nextFloat();
-
-        while(gold < goldOffer)
-        {
-            System.out.println(
-                "Insufficient gold. Try another value:"
-            );
-
-            goldOffer =
-                scnr.nextFloat();
-        }
+        waterRequest = scnr.nextInt();
+        
+        System.out.print("Gold: ");
+        goldRequest = scnr.nextInt();
+        
+        TradeOffer offer = new TradeOffer(goldOffer, foodOffer, waterOffer, goldRequest, foodRequest, waterRequest);
 
         return offer;
     }
@@ -144,18 +169,11 @@ public class Player {
 
     }
 
-    public boolean rejectTrade()
+    public void rejectTrade(Trader trader)
     {
-        String counter;
-
         System.out.println(
             "Trade Rejected. Suggest a counteroffer? (y/n): "
         );
-
-        counter =
-            scnr.next();
-
-        return counter.equalsIgnoreCase("y");
     }
 
     public void collectBonus(Items bonus)
@@ -475,40 +493,36 @@ public class Player {
         }
         else if(item instanceof Trader)
         {
-            tradeWithTrader();
+            boolean continueTrading = true; 
+            
+            while (continueTrading && this.currStrength > 10)
+            {
+                Trader trader = (Trader)item;
+                System.out.println(String.format("This trader has %d gold, %d food and %d water", trader.getMaxGold(), trader.getMaxFood(), trader.getMaxWater()));
+                boolean tradeSuccess = this.tradeWithTrader(trader);
+                continueTrading = false;
+
+                if (!tradeSuccess)
+                {
+                    String counter;
+
+                    counter =
+                        scnr.next();
+
+                    if (counter.equalsIgnoreCase("y"))
+                    {
+                        continueTrading = true;
+                    }
+                }
+            }
         }
     }
 
-    private void tradeWithTrader()
+    private boolean tradeWithTrader(Trader trader)
     {
-        int tradeCost = 5;
+        TradeOffer offer = promptTradeOffer();
 
-        if(gold >= tradeCost)
-        {
-            gold -= tradeCost;
-
-            currFood =
-                Math.min(
-                    maxFood,
-                    currFood + 20
-                );
-
-            currWater =
-                Math.min(
-                    maxWater,
-                    currWater + 20
-                );
-
-            System.out.println(
-                "Traded 5 gold for food and water."
-            );
-        }
-        else
-        {
-            System.out.println(
-                "Found a trader, but not enough gold to trade."
-            );
-        }
+        return trader.sendOffer(this, offer);
     }
 
     /*
@@ -589,6 +603,11 @@ public class Player {
         currStrength = value;
     }
 
+    public void addStrength(int value)
+    {
+        currStrength += value;
+    }
+
     public void setWater(int value)
     {
         currWater = value;
@@ -602,6 +621,21 @@ public class Player {
     public void setGold(int value)
     {
         gold = value;
+    }
+
+    public void addWater(int value)
+    {
+        currWater += value;
+    }
+
+    public void addFood(int value)
+    {
+        currFood += value;
+    }
+
+    public void addGold(int value)
+    {
+        gold += value;
     }
 
     public void setVision(Vision vision)
